@@ -36,15 +36,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    verify: {
-      type: Boolean,
-      default: false,
-    },
-    verificationToken: {
-      type: String,
-      required: [true, "Verify token is required"],
-      default: null,
-    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -52,36 +43,15 @@ const userSchema = new Schema(
 userSchema.post("save", handleMongooseError);
 
 const joiRegisterSchema = Joi.object({
-  name: Joi.string()
-    .required()
-    .messages({ "any.required": "missing required field name" }),
-  password: Joi.string()
-    .min(6)
-    .required()
-    .messages({ "any.required": "missing required field password" }),
-  email: Joi.string()
-    .pattern(emailRegexp)
-    .required()
-    .messages({ "any.required": "missing required field email" }),
+  name: Joi.string().required(),
+  password: Joi.string().min(6).required(),
+  email: Joi.string().pattern(emailRegexp).required(),
   subscription: Joi.string(),
 });
 
-const joiVerifyEmailSchema = Joi.object({
-  email: Joi.string()
-    .pattern(emailRegexp)
-    .required()
-    .messages({ "any.required": "missing required field email" }),
-});
-
 const joiLoginSchema = Joi.object({
-  password: Joi.string()
-    .min(6)
-    .required()
-    .messages({ "any.required": "missing required field password" }),
-  email: Joi.string()
-    .pattern(emailRegexp)
-    .required()
-    .messages({ "any.required": "missing required field email" }),
+  password: Joi.string().min(6).required(),
+  email: Joi.string().pattern(emailRegexp).required(),
 });
 
 const joiSubscriptionSchema = Joi.object({
@@ -92,7 +62,6 @@ const schemas = {
   joiRegisterSchema,
   joiLoginSchema,
   joiSubscriptionSchema,
-  joiVerifyEmailSchema,
 };
 
 const User = model("user", userSchema);
